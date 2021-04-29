@@ -16,18 +16,44 @@
 package com.example.android.whileinuselocation
 
 import android.content.Context
-import android.location.Location
 import androidx.core.content.edit
+import com.example.android.whileinuselocation.model.Location
 
 /**
  * Returns the `location` object as a human readable string.
  */
 fun Location?.toText(): String {
     return if (this != null) {
-        "($latitude, $longitude)"
+        toString(latitude, longitude)
     } else {
         "Unknown location"
     }
+}
+
+/**
+ * Returns the project model `location` object from an Android location object
+ */
+fun android.location.Location?.toLocation(): Location? {
+    return if (this != null) {
+        Location(this.latitude, this.longitude)
+    } else {
+        return null
+    }
+}
+
+/**
+ * Returns the `location` object as a human readable string.
+ */
+fun android.location.Location?.toText(): String {
+    return if (this != null) {
+        toString(latitude, longitude)
+    } else {
+        "Unknown location"
+    }
+}
+
+fun toString(lat: Double, lon: Double): String {
+    return "($lat, $lon)"
 }
 
 /**
