@@ -4,5 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocationRepository {
 
-  suspend fun getLocations(): Flow<List<com.example.android.whileinuselocation.model.Location>>
+    suspend fun getLocations(): Flow<List<com.example.android.whileinuselocation.model.Location>>
+
+    suspend fun insertLocation(location: com.example.android.whileinuselocation.model.Location)
 }

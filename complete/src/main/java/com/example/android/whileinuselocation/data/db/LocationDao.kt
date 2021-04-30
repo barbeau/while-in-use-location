@@ -1,9 +1,6 @@
 package com.example.android.whileinuselocation.data.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room.*
 import com.example.android.whileinuselocation.toLocation
 import kotlinx.coroutines.flow.Flow
 
@@ -18,7 +15,7 @@ interface LocationDao {
     }
   }
 
-  @Insert
+  @Insert(onConflict = OnConflictStrategy.IGNORE)
   suspend fun insertLocation(location: com.example.android.whileinuselocation.model.Location)
 
   @Query("DELETE FROM location_table")

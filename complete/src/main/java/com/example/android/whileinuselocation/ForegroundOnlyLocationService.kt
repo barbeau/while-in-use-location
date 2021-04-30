@@ -19,7 +19,6 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -30,13 +29,14 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
+import com.example.android.whileinuselocation.data.LocationRepository
+import com.google.android.gms.location.*
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 /**
  * Service tracks location when requested and updates Activity via binding. If Activity is
@@ -45,8 +45,11 @@ import java.util.concurrent.TimeUnit
  *
  * For apps running in the background on O+ devices, location is computed much less than previous
  * versions. Please reference documentation for details.
+ *
+ * Uses LifecycleService to be able to launch coroutines within the scope of this service
  */
-class ForegroundOnlyLocationService : Service() {
+@AndroidEntryPoint
+class ForegroundOnlyLocationService : LifecycleService() {
     /*
      * Checks whether the bound activity has really gone away (foreground service with notification
      * created) or simply orientation change (no-op).
@@ -75,7 +78,12 @@ class ForegroundOnlyLocationService : Service() {
     // last location to create a Notification if the user navigates away from the app.
     private var currentLocation: Location? = null
 
+    // Data store (in this case, Room database) where the service will persist the location data
+    @Inject
+    lateinit var repository: LocationRepository
+
     override fun onCreate() {
+        super.onCreate()
         Log.d(TAG, "onCreate()")
 
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -117,13 +125,12 @@ class ForegroundOnlyLocationService : Service() {
                 // if a Notification is created (when the user navigates away from app).
                 currentLocation = locationResult.lastLocation
 
-                // Notify our Activity that a new location was added. Again, if this was a
-                // production app, the Activity would be listening for changes to a database
-                // with new locations, but we are simplifying things a bit to focus on just
-                // learning the location side of things.
-                val intent = Intent(ACTION_FOREGROUND_ONLY_LOCATION_BROADCAST)
-                intent.putExtra(EXTRA_LOCATION, currentLocation)
-                LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
+                // Notify our Activity that a new location was added by adding to repository
+                currentLocation.toLocation()?.let {
+                    lifecycleScope.launch {
+                        repository.insertLocation(it)
+                    }
+                }
 
                 // Updates notification content if this service is running as a foreground
                 // service.
@@ -136,21 +143,22 @@ class ForegroundOnlyLocationService : Service() {
         }
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(TAG, "onStartCommand()")
 
         val cancelLocationTrackingFromNotification =
-            intent.getBooleanExtra(EXTRA_CANCEL_LOCATION_TRACKING_FROM_NOTIFICATION, false)
+                intent?.getBooleanExtra(EXTRA_CANCEL_LOCATION_TRACKING_FROM_NOTIFICATION, false)
 
-        if (cancelLocationTrackingFromNotification) {
+        if (cancelLocationTrackingFromNotification == true) {
             unsubscribeToLocationUpdates()
             stopSelf()
         }
         // Tells the system not to recreate the service after it's been killed.
-        return START_NOT_STICKY
+        return super.onStartCommand(intent, flags, START_NOT_STICKY)
     }
 
     override fun onBind(intent: Intent): IBinder {
+        super.onBind(intent)
         Log.d(TAG, "onBind()")
 
         // MainActivity (client) comes into foreground and binds to service, so the service can
@@ -192,6 +200,7 @@ class ForegroundOnlyLocationService : Service() {
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy()")
+        super.onDestroy()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -324,11 +333,6 @@ class ForegroundOnlyLocationService : Service() {
         private const val TAG = "ForegroundOnlyLocationService"
 
         private const val PACKAGE_NAME = "com.example.android.whileinuselocation"
-
-        internal const val ACTION_FOREGROUND_ONLY_LOCATION_BROADCAST =
-            "$PACKAGE_NAME.action.FOREGROUND_ONLY_LOCATION_BROADCAST"
-
-        internal const val EXTRA_LOCATION = "$PACKAGE_NAME.extra.LOCATION"
 
         private const val EXTRA_CANCEL_LOCATION_TRACKING_FROM_NOTIFICATION =
             "$PACKAGE_NAME.extra.CANCEL_LOCATION_TRACKING_FROM_NOTIFICATION"
