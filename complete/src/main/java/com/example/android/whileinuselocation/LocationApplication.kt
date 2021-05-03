@@ -6,4 +6,5 @@ import dagger.hilt.android.HiltAndroidApp
 // Required for Hilt dependency injection
 @HiltAndroidApp
 class LocationApplication : Application() {
+
 }

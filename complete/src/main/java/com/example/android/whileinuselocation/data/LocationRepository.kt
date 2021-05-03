@@ -1,10 +1,22 @@
 package com.example.android.whileinuselocation.data
 
-import kotlinx.coroutines.flow.Flow
+import androidx.annotation.WorkerThread
+import com.example.android.whileinuselocation.data.db.LocationDao
+import com.example.android.whileinuselocation.model.Location
+import javax.inject.Inject
 
-interface LocationRepository {
+class LocationRepository @Inject constructor(
+        private val locationDao: LocationDao
+    ) {
 
-    suspend fun getLocations(): Flow<List<com.example.android.whileinuselocation.model.Location>>
+    suspend fun getLocations() = locationDao.getLocations()
 
-    suspend fun insertLocation(location: com.example.android.whileinuselocation.model.Location)
+    // By default Room runs suspend queries off the main thread, therefore, we don't need to
+    // implement anything else to ensure we're not doing long running database work
+    // off the main thread.
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun insertLocation(location: Location) {
+        locationDao.insertLocation(location)
+    }
 }

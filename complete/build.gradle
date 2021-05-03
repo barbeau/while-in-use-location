@@ -27,6 +27,13 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+
+        // Export the schema to the /schemas directory so we can track changes across DB versions
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
     buildTypes {
         release {
@@ -70,7 +77,7 @@ dependencies {
     // Room for storing locatin data and observing it via Flow
     def room_version = "2.3.0"
     implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
 
     // Hilt for dependency injection

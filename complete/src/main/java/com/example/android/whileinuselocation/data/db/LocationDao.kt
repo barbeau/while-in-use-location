@@ -22,5 +22,5 @@ interface LocationDao {
   suspend fun deleteLocations()
 
   @Query("SELECT * FROM location_table")
-  suspend fun getLocations(): Flow<List<com.example.android.whileinuselocation.model.Location>>
+  fun getLocations(): Flow<List<com.example.android.whileinuselocation.model.Location>>
 }

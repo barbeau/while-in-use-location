@@ -143,7 +143,9 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         lifecycleScope.launch {
             // Observe locations via Flow converted to LiveData as they are inserted into Room by the Service
             repository.getLocations().asLiveData().observe(this@MainActivity, Observer {
-                logResultsToScreen("Foreground location: ${it[0].toText()}")
+                if (it.isNotEmpty()) {
+                    logResultsToScreen("Foreground location: ${it[0].toText()}")
+                }
             })
         }
     }
