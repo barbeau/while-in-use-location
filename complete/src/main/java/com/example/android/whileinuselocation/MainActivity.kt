@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    // Data store (in this case, Room database) from which to receive location updates via Flow
+    // Data store (in this case, Room database) from which to receive location updates via Flow as LiveData, injected via Hilt
     @Inject
     lateinit var repository: LocationRepository
 
