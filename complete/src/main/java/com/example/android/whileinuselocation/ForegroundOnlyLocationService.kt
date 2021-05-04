@@ -125,7 +125,7 @@ class ForegroundOnlyLocationService : LifecycleService() {
                 // if a Notification is created (when the user navigates away from app).
                 currentLocation = locationResult.lastLocation
 
-                // Notify our Activity that a new location was added by adding to repository
+                // Notify our Activity that a new location was observed by adding to repository
                 currentLocation.toLocation()?.let {
                     lifecycleScope.launch {
                         repository.updateLocation(it)
