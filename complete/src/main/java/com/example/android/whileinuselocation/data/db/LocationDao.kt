@@ -1,15 +1,14 @@
 package com.example.android.whileinuselocation.data.db
 
 import androidx.room.*
-import com.example.android.whileinuselocation.toLocation
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LocationDao {
 
   @Transaction
-  suspend fun updateLocation(location: android.location.Location) {
-    location.toLocation()?.let {
+  suspend fun updateLocation(location: com.example.android.whileinuselocation.model.Location) {
+    location.let {
       deleteLocations()
       insertLocation(it)
     }
@@ -21,6 +20,6 @@ interface LocationDao {
   @Query("DELETE FROM location_table")
   suspend fun deleteLocations()
 
-  @Query("SELECT * FROM location_table")
+  @Query("SELECT * FROM location_table ORDER BY elapsedRealtimeNanos")
   fun getLocations(): Flow<List<com.example.android.whileinuselocation.model.Location>>
 }

@@ -22,6 +22,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -35,6 +36,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 private const val TAG = "MainActivity"
 private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
@@ -122,10 +124,12 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
         foregroundOnlyLocationButton = findViewById(R.id.foreground_only_location_button)
         outputTextView = findViewById(R.id.output_text_view)
+        outputTextView.movementMethod = ScrollingMovementMethod()
 
         foregroundOnlyLocationButton.setOnClickListener {
             val enabled = sharedPreferences.getBoolean(
-                SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false)
+                SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false
+            )
 
             if (enabled) {
                 foregroundOnlyLocationService?.unsubscribeToLocationUpdates()
@@ -144,7 +148,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             // Observe locations via Flow converted to LiveData as they are inserted into Room by the Service
             repository.getLocations().asLiveData().observe(this@MainActivity, Observer {
                 if (it.isNotEmpty()) {
-                    logResultsToScreen("Foreground location: ${it[0].toText()}")
+                    logResultsToScreen("Foreground location: ${it[it.size - 1].toText()}")
                 }
             })
         }
@@ -175,8 +179,10 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         // Updates button states if new while in use location is added to SharedPreferences.
         if (key == SharedPreferenceUtil.KEY_FOREGROUND_ENABLED) {
-            updateButtonState(sharedPreferences.getBoolean(
-                SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false)
+            updateButtonState(
+                sharedPreferences.getBoolean(
+                    SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false
+                )
             )
         }
     }
