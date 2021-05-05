@@ -34,7 +34,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.android.whileinuselocation.data.LocationRepository
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -144,7 +143,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             // Observe locations via Flow converted to LiveData as they are inserted into Room by the Service
             repository.getLocations().asLiveData().observe(this@MainActivity, Observer {
                 if (it.isNotEmpty()) {
