@@ -28,12 +28,12 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.*
 import com.example.android.whileinuselocation.data.LocationRepository
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    // Data store (in this case, Room database) from which to receive location updates via Flow as LiveData, injected via Hilt
+    // Data store (in this case, Room database) from which to receive location updates via Flow, injected via Hilt
     @Inject
     lateinit var repository: LocationRepository
 
@@ -143,14 +143,15 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             }
         }
 
-        lifecycleScope.launchWhenStarted {
-            // Observe locations via Flow converted to LiveData as they are inserted into Room by the Service
-            repository.getLocations().asLiveData().observe(this@MainActivity, Observer {
+        // Observe locations via Flow as they are inserted into Room by the Service
+        repository.getLocations()
+            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            .onEach {
                 if (it.isNotEmpty()) {
                     logResultsToScreen("Foreground location: ${it[it.size - 1].toText()}")
                 }
-            })
-        }
+            }
+            .launchIn(lifecycleScope)
     }
 
     override fun onStart() {
