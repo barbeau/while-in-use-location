@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class LocationRepository @Inject constructor(
         private val locationDao: LocationDao
-    ) {
+) {
 
     fun getLocations() = locationDao.getLocations()
 

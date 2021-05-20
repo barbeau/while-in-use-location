@@ -11,16 +11,16 @@ private const val DB_NAME = "location_database"
 @Database(entities = [(Location::class)], version = 1)
 abstract class LocationDatabase : RoomDatabase() {
 
-  abstract fun locationDao(): LocationDao
+    abstract fun locationDao(): LocationDao
 
-  companion object {
-    fun create(context: Context): LocationDatabase {
+    companion object {
+        fun create(context: Context): LocationDatabase {
 
-      return Room.databaseBuilder(
-          context,
-          LocationDatabase::class.java,
-          DB_NAME
-      ).build()
+            return Room.databaseBuilder(
+                    context,
+                    LocationDatabase::class.java,
+                    DB_NAME
+            ).build()
+        }
     }
-  }
 }

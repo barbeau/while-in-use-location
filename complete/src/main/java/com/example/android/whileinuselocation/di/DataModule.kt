@@ -20,10 +20,10 @@ object DataModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): LocationDatabase =
-        LocationDatabase.create(context)
+            LocationDatabase.create(context)
 
     @Provides
     fun provideDao(database: LocationDatabase): LocationDao {
-      return database.locationDao()
+        return database.locationDao()
     }
 }
