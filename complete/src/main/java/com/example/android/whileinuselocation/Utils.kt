@@ -35,7 +35,7 @@ fun Location?.toText(): String {
  */
 fun android.location.Location?.toLocation(): Location? {
     return if (this != null) {
-        Location(this.elapsedRealtimeNanos, this.latitude, this.longitude)
+        Location(this.time, this.latitude, this.longitude)
     } else {
         return null
     }

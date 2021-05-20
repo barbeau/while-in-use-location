@@ -2,15 +2,21 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "85e8652e10323e4ecf8b9432ba6cbd5e",
+    "identityHash": "49c4ed32adf47f2e71df185fefc2447b",
     "entities": [
       {
         "tableName": "location_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`elapsedRealtimeNanos` INTEGER NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, PRIMARY KEY(`elapsedRealtimeNanos`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `time` INTEGER NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL)",
         "fields": [
           {
-            "fieldPath": "elapsedRealtimeNanos",
-            "columnName": "elapsedRealtimeNanos",
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -29,9 +35,9 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "elapsedRealtimeNanos"
+            "id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
@@ -40,7 +46,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '85e8652e10323e4ecf8b9432ba6cbd5e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '49c4ed32adf47f2e71df185fefc2447b')"
     ]
   }
 }

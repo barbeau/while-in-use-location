@@ -20,6 +20,6 @@ interface LocationDao {
   @Query("DELETE FROM location_table")
   suspend fun deleteLocations()
 
-  @Query("SELECT * FROM location_table ORDER BY elapsedRealtimeNanos")
+  @Query("SELECT * FROM location_table ORDER BY time")
   fun getLocations(): Flow<List<com.example.android.whileinuselocation.model.Location>>
 }
