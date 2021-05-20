@@ -35,7 +35,11 @@ fun Location?.toText(): String {
  */
 fun android.location.Location?.toLocation(): Location? {
     return if (this != null) {
-        Location(this.time, this.latitude, this.longitude)
+        Location(
+                time = time,
+                latitude = latitude,
+                longitude = longitude
+        )
     } else {
         return null
     }
