@@ -73,9 +73,7 @@ class ForegroundOnlyLocationService : LifecycleService() {
     // LocationCallback - Called when FusedLocationProviderClient has a new Location.
     private lateinit var locationCallback: LocationCallback
 
-    // Used only for local storage of the last known location. Usually, this would be saved to your
-    // database, but because this is a simplified sample without a full database, we only need the
-    // last location to create a Notification if the user navigates away from the app.
+    // We save a local reference to last location to create a Notification if the user navigates away from the app.
     private var currentLocation: Location? = null
 
     // Data store (in this case, Room database) where the service will persist the location data, injected via Hilt
@@ -120,9 +118,6 @@ class ForegroundOnlyLocationService : LifecycleService() {
             override fun onLocationResult(locationResult: LocationResult) {
                 super.onLocationResult(locationResult)
 
-                // Normally, you want to save a new location to a database. We are simplifying
-                // things a bit and just saving it as a local variable, as we only need it again
-                // if a Notification is created (when the user navigates away from app).
                 currentLocation = locationResult.lastLocation
 
                 // Notify our Activity that a new location was observed by adding to repository
