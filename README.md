@@ -1,4 +1,4 @@
-While-in-use Location + Room, Flow, and Hilt
+While-in-use Location + Flow and Hilt
 ===============================
 
 This repository is derived from the while-in-use-location, location-samples, and kotlin-couroutines codelabs and repositories:
