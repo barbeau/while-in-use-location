@@ -58,7 +58,7 @@ dependencies {
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
 
-    // To launch co-routines within the Service to store location data in Room and observe the Room Flow in the Activity
+    // To observe the flow within the Service based on the lifecycle
     def lifecycle_version = "2.4.0-alpha01"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
