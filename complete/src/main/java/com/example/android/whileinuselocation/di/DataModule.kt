@@ -1,6 +1,7 @@
 package com.example.android.whileinuselocation.di
 
 import android.content.Context
+import com.example.android.whileinuselocation.LocationApplication
 import com.example.android.whileinuselocation.data.SharedLocationManager
 import dagger.Module
 import dagger.Provides
@@ -18,6 +19,8 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideSharedLocationManager(@ApplicationContext context: Context): SharedLocationManager =
-        SharedLocationManager(context)
+    fun provideSharedLocationManager(
+        @ApplicationContext context: Context
+    ): SharedLocationManager =
+        SharedLocationManager(context, (context.applicationContext as LocationApplication).applicationScope)
 }
