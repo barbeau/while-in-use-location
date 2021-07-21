@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     lateinit var repository: LocationRepository
 
     // Get a reference to the Job from the Flow so we can stop it from UI events
-    private lateinit var locationFlow: Job
+    private var locationFlow: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -283,7 +283,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     private fun unsubscribeToLocationUpdates() {
-        locationFlow.cancel()
+        locationFlow?.cancel()
         foregroundOnlyLocationService?.unsubscribeToLocationUpdates()
     }
 }

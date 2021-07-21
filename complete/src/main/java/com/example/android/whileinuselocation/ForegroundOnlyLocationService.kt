@@ -72,7 +72,7 @@ class ForegroundOnlyLocationService : LifecycleService() {
     lateinit var repository: LocationRepository
 
     // Get a reference to the Job from the Flow so we can stop it from UI events
-    private lateinit var locationFlow: Job
+    private var locationFlow: Job? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -177,7 +177,7 @@ class ForegroundOnlyLocationService : LifecycleService() {
     fun unsubscribeToLocationUpdates() {
         Log.d(TAG, "unsubscribeToLocationUpdates()")
 
-        locationFlow.cancel()
+        locationFlow?.cancel()
         SharedPreferenceUtil.saveLocationTrackingPref(this, false)
     }
 

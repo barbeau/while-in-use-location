@@ -28,7 +28,7 @@ class SharedLocationManager @Inject constructor(
 ) {
 
     private val _receivingLocationUpdates: MutableStateFlow<Boolean> =
-        MutableStateFlow<Boolean>(false)
+        MutableStateFlow(false)
 
     /**
      * Status of location updates, i.e., whether the app is actively subscribed to location changes.
