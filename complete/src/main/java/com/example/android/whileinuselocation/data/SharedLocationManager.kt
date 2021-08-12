@@ -29,7 +29,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 private const val TAG = "SharedLocationManager"
 
@@ -39,7 +38,7 @@ private const val TAG = "SharedLocationManager"
  * Derived in part from https://github.com/android/location-samples/blob/main/LocationUpdatesBackgroundKotlin/app/src/main/java/com/google/android/gms/location/sample/locationupdatesbackgroundkotlin/data/MyLocationManager.kt
  * and https://github.com/googlecodelabs/kotlin-coroutines/blob/master/ktx-library-codelab/step-06/myktxlibrary/src/main/java/com/example/android/myktxlibrary/LocationUtils.kt
  */
-class SharedLocationManager @Inject constructor(
+class SharedLocationManager constructor(
     private val context: Context,
     externalScope: CoroutineScope
 ) {
