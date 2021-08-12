@@ -67,7 +67,7 @@ class ForegroundOnlyLocationService : LifecycleService() {
     // We save a local reference to last location to create a Notification if the user navigates away from the app.
     private var currentLocation: Location? = null
 
-    // Data store (in this case, Room database) where the service will persist the location data, injected via Hilt
+    // Repository of location data that the service will observe, injected via Hilt
     @Inject
     lateinit var repository: LocationRepository
 
