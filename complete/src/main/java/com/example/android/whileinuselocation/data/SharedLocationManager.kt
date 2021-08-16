@@ -71,12 +71,7 @@ class SharedLocationManager constructor(
             override fun onLocationResult(result: LocationResult?) {
                 result ?: return
                 Log.d(TAG, "New location: ${result.lastLocation.toText()}")
-                try {
-                    offer(result.lastLocation) // emit location into the Flow using ProducerScope.offer
-                } catch (e: Exception) {
-                    // nothing to do
-                    // Channel was probably already closed by the time offer was called
-                }
+                trySend(result.lastLocation)
             }
         }
 
