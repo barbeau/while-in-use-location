@@ -71,6 +71,7 @@ class SharedLocationManager constructor(
             override fun onLocationResult(result: LocationResult?) {
                 result ?: return
                 Log.d(TAG, "New location: ${result.lastLocation.toText()}")
+                // Send the new location to the Flow observers
                 trySend(result.lastLocation)
             }
         }
