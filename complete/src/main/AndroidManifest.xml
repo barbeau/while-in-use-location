@@ -30,7 +30,8 @@
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name="com.example.android.whileinuselocation.MainActivity">
+        <activity android:name="com.example.android.whileinuselocation.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
